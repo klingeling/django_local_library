@@ -1,0 +1,24 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <h1>Author: {{ object.first_name }}, {{ object.last_name }}</h1>
+
+    <p>{{ object.date_of_birth }} - {% if object.date_of_death %}{{ object.date_of_death }}{% endif %} </p>
+
+    <div style="margin-left: 20px;margin-top: 20px">
+        <h2>Books</h2>
+
+        {% for book in object.book_set.all %}
+            <hr>
+            <h4><a href="{{ book.get_absolute_url }}">{{ book.title }}</a>{% if book.bookinstance_set.count != 0 %}({{ book.bookinstance_set.count }}){% endif %}</h4>
+            <p class="text-muted">{{ book.summary }}</p>
+        {% endfor %}
+
+    </div>
+    {% if perms.catalog.can_mark_returned %}
+        <hr>
+        <a href="{% url 'author_update' author.pk %}">Update author</a><br/>
+        <a href="{% url 'author_delete' author.pk %}">Delete author</a>
+    {% endif %}
+
+{% endblock %}
